@@ -1,0 +1,90 @@
+port: 7890
+socks-port: 7891
+redir-port: 7892
+allow-lan: true
+mode: Rule
+log-level: debug
+external-controller: 127.0.0.1:9090
+secret: ""
+cfw-bypass:
+  - nat5.huanlinserver.com
+  - 172.16.*
+  - 192.168.*
+cfw-latency-timeout: 3000
+cfw-latency-url: http://www.gstatic.com/generate_204
+cfw-conn-break-strategy:
+  proxy: none
+  profile: true
+  mode: false
+cfw-child-process: []
+Proxy:
+  - name: work-xc
+    type: socks5
+    server: nat5.huanlinserver.com
+    port: "21018"
+    _index: 0
+  - name: Shadowsocks
+    type: socks5
+    server: 127.0.0.1
+    port: 1080
+    _index: 0
+  - name: viper-ipmi
+    type: ss
+    server: nat5.huanlinserver.com
+    port: "21013"
+    cipher: aes-256-cfb
+    password: cj12341234
+Proxy Group:
+  - name: Proxy
+    type: select
+    proxies:
+      - Shadowsocks
+    _index: 0
+  - name: work
+    proxies:
+      - work-xc
+    _index: 0
+    type: select
+  - name: ipmi
+    proxies:
+      - viper-ipmi
+    type: select
+Rule:
+  - IP-CIDR,172.20.25.0/24,work
+  - IP-CIDR,172.20.26.0/24,work
+  - IP-CIDR,172.30.0.0/16,work
+  - IP-CIDR,10.9.0.0/16,work
+  - IP-CIDR,10.4.0.0/16,work
+  - IP-CIDR,172.20.215.0/24,ipmi
+  - IP-CIDR,172.20.216.0/24,ipmi
+- DOMAIN-SUFFIX,sensetime.com,work
+  - DOMAIN-KEYWORD,sensetime,work
+  - DOMAIN,google.com,Proxy
+  - DOMAIN,github.com,Proxy
+  - DOMAIN-KEYWORD,google,Proxy
+  - DOMAIN-KEYWORD,aws,Proxy
+  - DOMAIN-KEYWORD,microsoft,DIRECT
+  - DOMAIN-KEYWORD,windows,DIRECT
+  - DOMAIN-KEYWORD,oracle,Proxy
+  - DOMAIN-KEYWORD,github,Proxy
+  - DOMAIN-KEYWORD,stackoverflow,Proxy
+  - DOMAIN-KEYWORD,apache,Proxy
+  - DOMAIN-KEYWORD,maven,Proxy
+  - DOMAIN-KEYWORD,gstatic,Proxy
+  - DOMAIN-KEYWORD,youtube,Proxy
+  - DOMAIN-KEYWORD,ytimg,Proxy
+  - DOMAIN-KEYWORD,dropbox,Proxy
+  - DOMAIN-KEYWORD,telegram,Proxy
+  - DOMAIN-KEYWORD,wikipedia,Proxy
+  - DOMAIN-KEYWORD,tonymac,Proxy
+  - DOMAIN-KEYWORD,source,Proxy
+  - DOMAIN-KEYWORD,64cloud,Proxy
+  - DOMAIN-KEYWORD,bandwagonhost,Proxy
+  - DOMAIN-KEYWORD,vultr,Proxy
+  - DOMAIN-KEYWORD,bwh,Proxy
+  - DOMAIN-KEYWORD,notion,Proxy
+  - DOMAIN-KEYWORD,twitter,Proxy
+  - DOMAIN-KEYWORD,twimg,Proxy
+  - GEOIP,US,Proxy
+  - GEOIP,CN,DIRECT
+  - MATCH,Proxy
