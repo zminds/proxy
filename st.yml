@@ -57,7 +57,7 @@ Rule:
   - IP-CIDR,10.4.0.0/16,work
   - IP-CIDR,172.20.215.0/24,ipmi
   - IP-CIDR,172.20.216.0/24,ipmi
-- DOMAIN-SUFFIX,sensetime.com,work
+  - DOMAIN-SUFFIX,sensetime.com,work
   - DOMAIN-KEYWORD,sensetime,work
   - DOMAIN,google.com,Proxy
   - DOMAIN,github.com,Proxy
